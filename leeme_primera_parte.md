@@ -663,5 +663,3 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
     ```
 
 -----
-
-Para continuar, puedo ayudarte a crear el superusuario de Django necesario para acceder al panel de administración. ¿Te gustaría que te proporcione el comando para **crear el superusuario**?
