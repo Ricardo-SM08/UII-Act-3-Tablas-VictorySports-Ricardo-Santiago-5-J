@@ -1,60 +1,53 @@
+¡Entendido\! Aquí tienes el procedimiento completo para el proyecto Django "Victorysports", presentado **paso a paso** y en formato de lista para que puedas copiar y ejecutar las acciones en tu terminal y archivos.
 
-El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pasos solicitados:
+## Procedimiento Paso a Paso (Proyecto Victorysports)
 
-### 1\. Preparación del Entorno y Proyecto
+### 1\. Preparación del Entorno y Proyecto (Python/Django)
 
-1.  **Procedimiento para crear carpeta del Proyecto: UIII\_Victorysports\_0362**
+1.  **Crear la carpeta del Proyecto:**
     ```bash
     mkdir UIII_Victorysports_0362
     ```
-2.  **Procedimiento para abrir VS Code sobre la carpeta UIII\_Victorysports\_0362**
+2.  **Acceder y abrir VS Code:**
     ```bash
     cd UIII_Victorysports_0362
     code .
     ```
-3.  **Procedimiento para abrir terminal en VS Code**
-      * En VS Code: `Terminal` -\> `New Terminal` o usar el atajo ` Ctrl + Shift + \`` (Windows/Linux) o  `Cmd + \`\` (Mac).
-4.  **Procedimiento para crear carpeta entorno virtual ".venv" desde terminal de VS Code**
+3.  **Abrir la Terminal en VS Code:**
+      * Usar `Terminal` -\> `New Terminal` o el atajo de teclado.
+4.  **Crear el entorno virtual ".venv":**
     ```bash
     python -m venv .venv
     ```
-5.  **Procedimiento para activar el entorno virtual**
-      * **Windows (Command Prompt):**
+5.  **Activar el entorno virtual:**
+      * **Windows (CMD/PowerShell):**
         ```bash
         .venv\Scripts\activate
-        ```
-      * **Windows (PowerShell):**
-        ```bash
-        .venv\Scripts\Activate.ps1
         ```
       * **macOS/Linux:**
         ```bash
         source .venv/bin/activate
         ```
-    *(Aparecerá `(.venv)` al inicio de la línea de comandos indicando que está activo.)*
-6.  **Procedimiento para activar intérprete de python**
-      * En VS Code:
-          * Presionar `Ctrl + Shift + P` o `Cmd + Shift + P` para abrir la **Paleta de Comandos**.
-          * Escribir y seleccionar `Python: Select Interpreter`.
-          * Seleccionar el intérprete que se encuentra dentro de la carpeta `.venv` (Ej: `./.venv/Scripts/python.exe` o `./.venv/bin/python`).
-7.  **Procedimiento para instalar Django**
+6.  **Activar el intérprete de Python en VS Code:**
+      * Presionar `Ctrl + Shift + P` y seleccionar `Python: Select Interpreter`. Elegir la ruta del `.venv`.
+7.  **Instalar Django:**
     ```bash
     pip install django
     ```
-8.  **Procedimiento para crear proyecto backend\_Victorysports sin duplicar carpeta**
+8.  **Crear el proyecto `backend_Victorysports` (sin duplicar carpeta):**
     ```bash
     django-admin startproject backend_Victorysports .
     ```
-9.  **Procedimiento para crear aplicacion app\_victorysports**
+9.  **Crear la aplicación `app_victorysports`:**
     ```bash
     python manage.py startapp app_victorysports
     ```
 
-### 2\. Configuración de Modelos (models.py)
+-----
 
-10. **Aquí el modelo models.py**
-      * Crear o modificar el archivo `app_victorysports/models.py` con el siguiente contenido (basado en el archivo adjunto):
-    <!-- end list -->
+### 2\. Definición de Modelos (`models.py`)
+
+10. [cite\_start]**Editar el archivo `app_victorysports/models.py`** con el siguiente código para los modelos `Proveedor`, `Producto` y `ProductoProveedor`[cite: 1]:
     ```python
     from django.db import models
 
@@ -115,69 +108,55 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
             return f"Relación: {self.producto.nombre} - {self.proveedor.nombre_empresa}"
     ```
 
-### 3\. Configuraciones y Migraciones Iniciales
+-----
 
-11. **Procedimiento para agregar app\_victorysports en settings.py de backend\_victorysports**
-      * Abrir el archivo `backend_Victorysports/settings.py` y agregar `'app_victorysports'` a la lista `INSTALLED_APPS`:
-    <!-- end list -->
+### 3\. Configuración del Proyecto y Migraciones
+
+11. [cite\_start]**Agregar `app_victorysports` en `backend_Victorysports/settings.py`**[cite: 1]:
     ```python
-    # backend_Victorysports/settings.py
-    # ...
+    # En settings.py, dentro de INSTALLED_APPS
     INSTALLED_APPS = [
-        # ... otras apps
+        # ...
         'app_victorysports',  # <--- AGREGAR ESTA LÍNEA
     ]
-    # ...
     ```
-12. **Procedimiento para realizar las migraciones (makemigrations y migrate)**
+12. **Crear y aplicar las migraciones:**
     ```bash
     python manage.py makemigrations app_victorysports
     python manage.py migrate
     ```
 
-### 4\. Vistas (Views)
+-----
 
-13. **En view de app\_victorysports crear las funciones con sus códigos correspondientes...**
-      * Modificar el archivo `app_victorysports/views.py` para incluir las funciones (se asume un flujo básico de CRUD sin uso de `forms.py` y solo como esqueleto):
-    <!-- end list -->
+### 4\. Vistas y URLs
+
+13. [cite\_start]**Editar el archivo `app_victorysports/views.py`** con las funciones CRUD para Proveedor[cite: 1]:
     ```python
-    # app_victorysports/views.py
     from django.shortcuts import render, redirect, get_object_or_404
     from django.http import HttpResponse
     from .models import Proveedor
-    from django.db import IntegrityError # Para manejar unique=True
+    from django.db import IntegrityError
     from django.views.decorators.http import require_POST
 
     def inicio_victorysports(request):
-        # Función para la página de inicio
-        return render(request, 'inicio.html') # Se asumirá 'inicio.html' en templates
+        return render(request, 'inicio.html')
 
     def agregar_proveedor(request):
         if request.method == 'POST':
-            # Obtener datos de POST, sin validación según la instrucción
-            nombre_empresa = request.POST.get('nombre_empresa')
-            telefono_empresa = request.POST.get('telefono_empresa')
-            email_empresa = request.POST.get('email_empresa')
-            pais_origen = request.POST.get('pais_origen')
-            contacto_principal = request.POST.get('contacto_principal')
-            direccion = request.POST.get('direccion')
-
             try:
                 Proveedor.objects.create(
-                    nombre_empresa=nombre_empresa,
-                    telefono_empresa=telefono_empresa,
-                    email_empresa=email_empresa,
-                    pais_origen=pais_origen,
-                    contacto_principal=contacto_principal,
-                    direccion=direccion
+                    nombre_empresa=request.POST.get('nombre_empresa'),
+                    telefono_empresa=request.POST.get('telefono_empresa'),
+                    email_empresa=request.POST.get('email_empresa'),
+                    pais_origen=request.POST.get('pais_origen'),
+                    contacto_principal=request.POST.get('contacto_principal'),
+                    direccion=request.POST.get('direccion')
                 )
-                return redirect('ver_proveedor') # Redirigir a la lista de proveedores
+                return redirect('ver_proveedor')
             except IntegrityError:
-                # Manejar caso de nombre_empresa duplicado
                 return render(request, 'proveedor/agregar_proveedor.html', {
                     'error_message': 'Ya existe un proveedor con ese nombre de empresa.'
                 })
-
         return render(request, 'proveedor/agregar_proveedor.html')
 
     def ver_proveedor(request):
@@ -191,7 +170,6 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
     def realizar_actualizacion_proveedor(request, pk):
         if request.method == 'POST':
             proveedor = get_object_or_404(Proveedor, pk=pk)
-            # Obtener datos de POST, sin validación
             proveedor.nombre_empresa = request.POST.get('nombre_empresa')
             proveedor.telefono_empresa = request.POST.get('telefono_empresa')
             proveedor.email_empresa = request.POST.get('email_empresa')
@@ -207,7 +185,6 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
                     'proveedor': proveedor,
                     'error_message': 'Ya existe otro proveedor con ese nombre de empresa.'
                 })
-
         return redirect('ver_proveedor')
 
     @require_POST
@@ -216,17 +193,8 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
         proveedor.delete()
         return redirect('ver_proveedor')
     ```
-
-### 5\. Configuración de URLs
-
-14. **Procedimiento para crear el archivo urls.py en app\_victorysports con el código correspondiente...**
-
-      * Crear el archivo `app_victorysports/urls.py`:
-
-    <!-- end list -->
-
+14. [cite\_start]**Crear el archivo `app_victorysports/urls.py`** con las rutas del CRUD[cite: 1]:
     ```python
-    # app_victorysports/urls.py
     from django.urls import path
     from . import views
 
@@ -240,55 +208,28 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
         path('proveedor/borrar/<int:pk>/', views.borrar_proveedor, name='borrar_proveedor'),
     ]
     ```
-
-15. **Realizar las configuraciones correspondiente a urls.py de backend\_victorysports...**
-
-      * Abrir el archivo `backend_Victorysports/urls.py` y agregar la ruta de `app_victorysports`:
-
-    <!-- end list -->
-
+15. [cite\_start]**Configurar `backend_Victorysports/urls.py` para enlazar la aplicación**[cite: 1]:
     ```python
-    # backend_Victorysports/urls.py
     from django.contrib import admin
-    from django.urls import path, include # Importar include
+    from django.urls import path, include
 
     urlpatterns = [
         path('admin/', admin.site.urls),
-        path('', include('app_victorysports.urls')), # <--- AGREGAR ESTA LÍNEA
+        path('', include('app_victorysports.urls')), # Enlaza la app principal
     ]
     ```
 
-### 6\. Archivos HTML (Templates)
+-----
 
-16. **Crear la carpeta "templates" dentro de "app\_victorysports"**
+### 5\. Creación de Templates HTML
 
+16. **Crear las carpetas de templates:**
     ```bash
     mkdir app_victorysports/templates
-    ```
-
-17. **En la carpeta templates crear los archivos html (base.html, header.html, navbar.html, footer.html, inicio.html)**
-
-      * Crear la subcarpeta `proveedor` dentro de `app_victorysports/templates` para el CRUD de proveedor.
-
-    <!-- end list -->
-
-    ```bash
     mkdir app_victorysports/templates/proveedor
+    mkdir app_victorysports/templates/categoria # Carpeta vacía de placeholder
     ```
-
-      * Crear los archivos HTML:
-          * `app_victorysports/templates/base.html`
-          * `app_victorysports/templates/header.html`
-          * `app_victorysports/templates/navbar.html`
-          * `app_victorysports/templates/footer.html`
-          * `app_victorysports/templates/inicio.html`
-          * `app_victorysports/templates/proveedor/agregar_proveedor.html`
-          * `app_victorysports/templates/proveedor/ver_proveedor.html`
-          * `app_victorysports/templates/proveedor/actualizar_proveedor.html`
-          * `app_victorysports/templates/proveedor/borrar_proveedor.html` (Este archivo no es necesario si se usa un formulario de confirmación, pero se crea por instrucción)
-
-18. **Contenido de `base.html` (Incluyendo Bootstrap)**
-
+17. [cite\_start]**Crear `app_victorysports/templates/base.html` (Incluye Bootstrap)**[cite: 1]:
     ```html
     {% load static %}
     <!DOCTYPE html>
@@ -313,9 +254,7 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
     </body>
     </html>
     ```
-
-19. **Contenido de `header.html`**
-
+18. **Crear `app_victorysports/templates/header.html`:**
     ```html
     <header class="py-3 mb-4 border-bottom" style="background-color: #4CAF50;">
         <div class="container d-flex flex-wrap justify-content-center">
@@ -325,9 +264,7 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
         </div>
     </header>
     ```
-
-20. **Contenido de `navbar.html`** (Adaptando las opciones del archivo adjunto)
-
+19. [cite\_start]**Crear `app_victorysports/templates/navbar.html` (Incluye menús de Categoría, Salas, y Películas como placeholders)**[cite: 1]:
     ```html
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
@@ -353,10 +290,10 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
                             <i class="fas fa-tags me-1"></i> Categorías
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownCategoria">
-                            <li><a class="dropdown-item" href="#">Agregar Categoría</a></li>
-                            <li><a class="dropdown-item" href="#">Ver Categorías</a></li>
-                            <li><a class="dropdown-item" href="#">Actualizar Categoría</a></li>
-                            <li><a class="dropdown-item" href="#">Borrar Categoría</a></li>
+                            <li><a class="dropdown-item" href="#">Agregar Categoria</a></li>
+                            <li><a class="dropdown-item" href="#">Ver Categoria</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar Categoria</a></li>
+                            <li><a class="dropdown-item" href="#">Borrar Categoria</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -375,10 +312,10 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
                             <i class="fas fa-film me-1"></i> Películas
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownPeliculas">
-                            <li><a class="dropdown-item" href="#">Agregar Películas</a></li>
-                            <li><a class="dropdown-item" href="#">Ver Películas</a></li>
-                            <li><a class="dropdown-item" href="#">Actualizar Películas</a></li>
-                            <li><a class="dropdown-item" href="#">Borrar Películas</a></li>
+                            <li><a class="dropdown-item" href="#">Agregar Peliculas</a></li>
+                            <li><a class="dropdown-item" href="#">Ver Peliculas</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar Peliculas</a></li>
+                            <li><a class="dropdown-item" href="#">Borrar Peliculas</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -387,9 +324,7 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
         <script src="https://kit.fontawesome.com/tu-token-de-font-awesome.js" crossorigin="anonymous"></script>
     </nav>
     ```
-
-21. **Contenido de `footer.html`**
-
+20. [cite\_start]**Crear `app_victorysports/templates/footer.html` (Fijo al final)**[cite: 1]:
     ```html
     <footer class="footer mt-auto py-3 bg-dark fixed-bottom">
         <div class="container text-center">
@@ -399,9 +334,7 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
         </div>
     </footer>
     ```
-
-22. **Contenido de `inicio.html`**
-
+21. [cite\_start]**Crear `app_victorysports/templates/inicio.html` (Página de inicio)**[cite: 1]:
     ```html
     {% extends 'base.html' %}
     {% block title %}Inicio - Victorysports{% endblock %}
@@ -415,11 +348,11 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
     <div class="row mt-4">
         <div class="col-lg-8 offset-lg-2">
             <div class="card shadow">
-                <img src="https://via.placeholder.com/800x400?text=Victorysports+Imagen" class="card-img-top" alt="Imagen de Victorysports">
+                <img src="https://via.placeholder.com/800x400?text=Imagen+Victorysports+Deportiva" class="card-img-top" alt="Imagen de Victorysports">
                 <div class="card-body">
                     <h5 class="card-title">Información del Sistema</h5>
                     <p class="card-text">
-                        Este sistema permite la administración completa de los recursos de Victorysports, incluyendo el manejo de Proveedores, Productos y la relación entre ellos. Desarrollado con Django y Python.
+                        Este sistema permite la administración completa de los recursos de Victorysports, incluyendo el manejo de Proveedores, Productos y la relación entre ellos.
                     </p>
                     <ul>
                         <li>**Lenguaje:** Python</li>
@@ -432,9 +365,7 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
     </div>
     {% endblock %}
     ```
-
-23. **Contenido de `proveedor/agregar_proveedor.html`**
-
+22. [cite\_start]**Crear `app_victorysports/templates/proveedor/agregar_proveedor.html`**[cite: 1]:
     ```html
     {% extends 'base.html' %}
     {% block title %}Agregar Proveedor{% endblock %}
@@ -479,9 +410,7 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
     </div>
     {% endblock %}
     ```
-
-24. **Contenido de `proveedor/ver_proveedor.html`**
-
+23. [cite\_start]**Crear `app_victorysports/templates/proveedor/ver_proveedor.html`**[cite: 1]:
     ```html
     {% extends 'base.html' %}
     {% block title %}Ver Proveedores{% endblock %}
@@ -513,7 +442,6 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
                     <td>{{ proveedor.pais_origen }}</td>
                     <td>{{ proveedor.fecha_registro|date:"Y-m-d" }}</td>
                     <td>
-                        <a href="{% url 'actualizar_proveedor' proveedor.id_proveedor %}" class="btn btn-info btn-sm me-1" title="Ver"><i class="fas fa-eye"></i></a>
                         <a href="{% url 'actualizar_proveedor' proveedor.id_proveedor %}" class="btn btn-warning btn-sm me-1" title="Editar"><i class="fas fa-edit"></i></a>
                         <form action="{% url 'borrar_proveedor' proveedor.id_proveedor %}" method="post" class="d-inline" onsubmit="return confirm('¿Está seguro de borrar a {{ proveedor.nombre_empresa }}?');">
                             {% csrf_token %}
@@ -534,9 +462,7 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     {% endblock %}
     ```
-
-25. **Contenido de `proveedor/actualizar_proveedor.html`**
-
+24. [cite\_start]**Crear `app_victorysports/templates/proveedor/actualizar_proveedor.html`**[cite: 1]:
     ```html
     {% extends 'base.html' %}
     {% block title %}Actualizar Proveedor{% endblock %}
@@ -582,32 +508,12 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
     {% endblock %}
     ```
 
-26. **Contenido de `proveedor/borrar_proveedor.html`** (Formulario de confirmación opcional, la lógica se manejó en la vista)
+-----
 
-    ```html
-    {% extends 'base.html' %}
-    {% block title %}Borrar Proveedor{% endblock %}
-    {% block content %}
-    <h2 class="mb-4 text-danger">Confirmar Borrado</h2>
-    <div class="alert alert-warning">
-        <p>¿Está seguro que desea eliminar al proveedor **{{ proveedor.nombre_empresa }}**?</p>
-        <p>Esta acción no se puede deshacer.</p>
-    </div>
-    <form action="{% url 'borrar_proveedor' proveedor.id_proveedor %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Confirmar Borrado</button>
-        <a href="{% url 'ver_proveedor' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
-    {% endblock %}
-    ```
+### 6\. Configuración del Administrador y Ejecución
 
-### 7\. Administración de Django (Admin)
-
-27. **Procedimiento para registrar los modelos en admin.py y volver a realizar las migraciones**
-      * Modificar el archivo `app_victorysports/admin.py`:
-    <!-- end list -->
+25. [cite\_start]**Registrar los modelos en `app_victorysports/admin.py`**[cite: 1]:
     ```python
-    # app_victorysports/admin.py
     from django.contrib import admin
     from .models import Proveedor, Producto, ProductoProveedor
 
@@ -626,40 +532,27 @@ El desarrollo del proyecto Django "Victorysports" se realizará siguiendo los pa
     class ProductoProveedorAdmin(admin.ModelAdmin):
         list_display = ('producto', 'proveedor', 'precio_compra', 'cantidad_comprada', 'es_proveedor_activo')
         list_filter = ('es_proveedor_activo',)
-        raw_id_fields = ('producto', 'proveedor') # Útil para Many-to-Many
+        raw_id_fields = ('producto', 'proveedor')
 
     # Registro de modelos
     admin.site.register(Proveedor, ProveedorAdmin)
     admin.site.register(Producto, ProductoAdmin)
     admin.site.register(ProductoProveedor, ProductoProveedorAdmin)
     ```
-      * **Volver a realizar las migraciones** (solo `makemigrations` es necesario si se agregó o modificó el modelo en `admin.py`, pero la instrucción pide ambos):
-    <!-- end list -->
+26. **Volver a aplicar migraciones (solo para asegurar la configuración del Admin):**
     ```bash
     python manage.py makemigrations
     python manage.py migrate
     ```
-
-### 8\. Ejecución
-
-28. **Finalmente ejecutar servidor en el puerto puerto 8036**
-
-      * Asegúrate de que el entorno virtual esté activo (`(.venv)` al inicio de la línea de comandos).
-
-    <!-- end list -->
-
+27. **Crear un superusuario (opcional, pero necesario para el Admin):**
+    ```bash
+    python manage.py createsuperuser
+    ```
+28. **Ejecutar el servidor en el puerto 8036:**
     ```bash
     python manage.py runserver 8036
     ```
-
-29. **Procedimiento para copiar y pegar el link en el navegador**
-
-      * Una vez que el servidor esté corriendo, abrir el navegador y navegar a:
-
-    <!-- end list -->
-
+29. **Acceder al proyecto en el navegador:**
     ```
     http://127.0.0.1:8036/
     ```
-
------
