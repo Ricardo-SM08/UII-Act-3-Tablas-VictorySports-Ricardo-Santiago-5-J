@@ -1,558 +1,808 @@
-¡Entendido\! Aquí tienes el procedimiento completo para el proyecto Django "Victorysports", presentado **paso a paso** y en formato de lista para que puedas copiar y ejecutar las acciones en tu terminal y archivos.
-
-## Procedimiento Paso a Paso (Proyecto Victorysports)
-
-### 1\. Preparación del Entorno y Proyecto (Python/Django)
-
-1.  **Crear la carpeta del Proyecto:**
-    ```bash
-    mkdir UIII_Victorysports_0362
-    ```
-2.  **Acceder y abrir VS Code:**
-    ```bash
-    cd UIII_Victorysports_0362
-    code .
-    ```
-3.  **Abrir la Terminal en VS Code:**
-      * Usar `Terminal` -\> `New Terminal` o el atajo de teclado.
-4.  **Crear el entorno virtual ".venv":**
-    ```bash
-    python -m venv .venv
-    ```
-5.  **Activar el entorno virtual:**
-      * **Windows (CMD/PowerShell):**
-        ```bash
-        .venv\Scripts\activate
-        ```
-      * **macOS/Linux:**
-        ```bash
-        source .venv/bin/activate
-        ```
-6.  **Activar el intérprete de Python en VS Code:**
-      * Presionar `Ctrl + Shift + P` y seleccionar `Python: Select Interpreter`. Elegir la ruta del `.venv`.
-7.  **Instalar Django:**
-    ```bash
-    pip install django
-    ```
-8.  **Crear el proyecto `backend_Victorysports` (sin duplicar carpeta):**
-    ```bash
-    django-admin startproject backend_Victorysports .
-    ```
-9.  **Crear la aplicación `app_victorysports`:**
-    ```bash
-    python manage.py startapp app_victorysports
-    ```
+¡Absolutamente\! Aquí tienes los pasos detallados con el código y comandos, siguiendo el orden y los requisitos de tu plan para el proyecto **VictorySports** con **Django** y **Python**.
 
 -----
 
-### 2\. Definición de Modelos (`models.py`)
+## 💻 Configuración Inicial del Proyecto
 
-10. [cite\_start]**Editar el archivo `app_victorysports/models.py`** con el siguiente código para los modelos `Proveedor`, `Producto` y `ProductoProveedor`[cite: 1]:
-    ```python
-    from django.db import models
+Estos pasos configuran el entorno de trabajo y la estructura base.
 
-    # --- Modelo para Proveedor ---
-    class Proveedor(models.Model):
-        id_proveedor = models.AutoField(primary_key=True)
-        nombre_empresa = models.CharField(max_length=150, unique=True)
-        telefono_empresa = models.CharField(max_length=15)
-        email_empresa = models.EmailField(max_length=100)
-        pais_origen = models.CharField(max_length=50)
-        contacto_principal = models.CharField(max_length=100)
-        fecha_registro = models.DateField(auto_now_add=True)
-        direccion = models.TextField()
+### 1\. Crear carpeta del Proyecto: `UIII_Victorysports_0362`
 
-        class Meta:
-            verbose_name = "Proveedor"
-            verbose_name_plural = "Proveedores"
+Abre tu terminal o símbolo del sistema y ejecuta:
 
-        def __str__(self):
-            return self.nombre_empresa
+```bash
+mkdir UIII_Victorysports_0362
+cd UIII_Victorysports_0362
+```
 
-    # --- Modelo para Producto ---
-    class Producto(models.Model):
-        id_producto = models.AutoField(primary_key=True)
-        nombre = models.CharField(max_length=255)
-        precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-        stock = models.IntegerField(default=0)
-        marca = models.CharField(max_length=100)
-        img_url = models.URLField(max_length=255, blank=True, null=True)
-        categoria = models.CharField(max_length=50)
-        color = models.CharField(max_length=50)
+### 2\. Abrir VS Code sobre la carpeta
 
-        class Meta:
-            verbose_name = "Producto"
-            verbose_name_plural = "Productos"
+Desde la terminal dentro de la carpeta:
 
-        def __str__(self):
-            return f"{self.nombre} ({self.marca})"
+```bash
+code .
+```
 
-    # --- Modelo para Producto Proveedor (Tabla Intermedia/Many-to-Many con Datos Adicionales) ---
-    class ProductoProveedor(models.Model):
-        producto = models.ForeignKey(Producto, on_delete=models.CASCADE,
-                                     related_name='relaciones_proveedor')
-        proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE,
-                                      related_name='relaciones_producto')
-        precio_compra = models.DecimalField(max_digits=10, decimal_places=2)
-        fecha_ultima_compra = models.DateField(null=True, blank=True)
-        cantidad_comprada = models.IntegerField(default=1)
-        referencia_pedido = models.CharField(max_length=50, blank=True, null=True)
-        es_proveedor_activo = models.BooleanField(default=True)
+*(Asume que tienes configurado VS Code para abrir desde la línea de comandos)*
 
-        class Meta:
-            unique_together = (('producto', 'proveedor'),)
-            verbose_name = "Producto por Proveedor"
-            verbose_name_plural = "Productos por Proveedores"
+### 3\. Abrir terminal en VS Code
 
-        def __str__(self):
-            return f"Relación: {self.producto.nombre} - {self.proveedor.nombre_empresa}"
-    ```
+En VS Code, usa el atajo **`Ctrl + \`** o ve a **Terminal** \> **New Terminal**.
 
------
+### 4\. Crear carpeta entorno virtual `.venv`
 
-### 3\. Configuración del Proyecto y Migraciones
+Utiliza el módulo `venv` de Python:
 
-11. [cite\_start]**Agregar `app_victorysports` en `backend_Victorysports/settings.py`**[cite: 1]:
-    ```python
-    # En settings.py, dentro de INSTALLED_APPS
-    INSTALLED_APPS = [
-        # ...
-        'app_victorysports',  # <--- AGREGAR ESTA LÍNEA
-    ]
-    ```
-12. **Crear y aplicar las migraciones:**
+```bash
+python -m venv .venv
+```
+
+### 5\. Activar el entorno virtual
+
+El comando varía según el sistema operativo:
+
+  * **Windows (PowerShell):**
     ```bash
-    python manage.py makemigrations app_victorysports
-    python manage.py migrate
+    .venv\Scripts\Activate.ps1
     ```
+  * **Windows (CMD):**
+    ```bash
+    .venv\Scripts\activate.bat
+    ```
+  * **macOS/Linux:**
+    ```bash
+    source .venv/bin/activate
+    ```
+
+Verás `(.venv)` al inicio de la línea de comandos indicando que está activo.
+
+### 6\. Activar intérprete de python.
+
+Al activar el entorno virtual, automáticamente estás usando el intérprete de Python asociado a ese entorno.
+
+### 7\. Instalar Django
+
+Con el entorno virtual activo:
+
+```bash
+pip install django
+```
+
+### 8\. Crear proyecto `backend_Victorysports` sin duplicar carpeta
+
+El punto `.` al final evita la carpeta duplicada:
+
+```bash
+django-admin startproject backend_Victorysports .
+```
+
+### 9\. Crear aplicación `app_victorysports`
+
+```bash
+python manage.py startapp app_victorysports
+```
+
+### 10\. Estructura de Carpetas y Archivos (Paso 29)
+
+Tu estructura inicial debe verse así:
+
+```
+UIII_Victorysports_0362/
+├── .venv/
+├── backend_Victorysports/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py  <-- URLS principal del proyecto
+│   └── wsgi.py
+├── app_victorysports/
+│   ├── migrations/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py  <-- Aquí va el código de los modelos
+│   ├── tests.py
+│   └── views.py   <-- Aquí va el código de las vistas
+├── manage.py
+└── (crear) app_victorysports/templates/
+    ├── base.html
+    ├── header.html
+    ├── navbar.html
+    ├── footer.html
+    ├── inicio.html
+    └── proveedor/
+        ├── agregar_proveedor.html
+        ├── ver_proveedor.html
+        ├── actualizar_proveedor.html
+        └── borrar_proveedor.html
+```
+
+Crea manualmente la carpeta `app_victorysports/templates` y la subcarpeta `proveedor` dentro de `templates`. Luego crea los archivos HTML dentro de ellas.
 
 -----
 
-### 4\. Vistas y URLs
+## 🛠️ Configuración de Django
 
-13. [cite\_start]**Editar el archivo `app_victorysports/views.py`** con las funciones CRUD para Proveedor[cite: 1]:
-    ```python
-    from django.shortcuts import render, redirect, get_object_or_404
-    from django.http import HttpResponse
-    from .models import Proveedor
-    from django.db import IntegrityError
-    from django.views.decorators.http import require_POST
+### 11\. Agregar `app_victorysports` en `settings.py`
 
-    def inicio_victorysports(request):
-        return render(request, 'inicio.html')
+Abre `backend_Victorysports/settings.py` y agrega la aplicación a `INSTALLED_APPS`:
 
-    def agregar_proveedor(request):
-        if request.method == 'POST':
-            try:
-                Proveedor.objects.create(
-                    nombre_empresa=request.POST.get('nombre_empresa'),
-                    telefono_empresa=request.POST.get('telefono_empresa'),
-                    email_empresa=request.POST.get('email_empresa'),
-                    pais_origen=request.POST.get('pais_origen'),
-                    contacto_principal=request.POST.get('contacto_principal'),
-                    direccion=request.POST.get('direccion')
-                )
-                return redirect('ver_proveedor')
-            except IntegrityError:
-                return render(request, 'proveedor/agregar_proveedor.html', {
-                    'error_message': 'Ya existe un proveedor con ese nombre de empresa.'
-                })
-        return render(request, 'proveedor/agregar_proveedor.html')
+```python
+# backend_Victorysports/settings.py
 
-    def ver_proveedor(request):
-        proveedores = Proveedor.objects.all()
-        return render(request, 'proveedor/ver_proveedor.html', {'proveedores': proveedores})
+INSTALLED_APPS = [
+    # ... otras apps de Django
+    'app_victorysports',  # <--- Agregar esta línea
+]
 
-    def actualizar_proveedor(request, pk):
-        proveedor = get_object_or_404(Proveedor, pk=pk)
-        return render(request, 'proveedor/actualizar_proveedor.html', {'proveedor': proveedor})
+# (Opcional, si no lo tienes)
+LANGUAGE_CODE = 'es-mx'
+TIME_ZONE = 'America/Mexico_City' # O tu zona horaria
+```
 
-    def realizar_actualizacion_proveedor(request, pk):
-        if request.method == 'POST':
-            proveedor = get_object_or_404(Proveedor, pk=pk)
+### 12\. Configurar `urls.py` de `backend_Victorysports`
+
+Abre `backend_Victorysports/urls.py` para enlazar con las URLs de la aplicación:
+
+```python
+# backend_Victorysports/urls.py
+
+from django.contrib import admin
+from django.urls import path, include  # Importar include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # Enlaza todas las rutas que empiecen con 'victorysports/' a la app
+    path('', include('app_victorysports.urls')), # <--- Agrega esta línea
+]
+```
+
+> **Nota:** Se usa `path('', ...)` para que las URL de la aplicación sean la raíz del proyecto.
+
+### 13\. Crear `urls.py` en `app_victorysports`
+
+Crea el archivo `app_victorysports/urls.py` y añade el siguiente código para el CRUD de `Proveedor` (las URLs se definirán después de crear las vistas):
+
+```python
+# app_victorysports/urls.py
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.inicio_victorysports, name='inicio_victorysports'),
+    path('proveedores/', views.ver_proveedor, name='ver_proveedor'),
+    path('proveedores/agregar/', views.agregar_proveedor, name='agregar_proveedor'),
+    path('proveedores/actualizar/<int:pk>/', views.actualizar_proveedor, name='actualizar_proveedor'),
+    path('proveedores/realizar_actualizacion/', views.realizar_actualizacion_proveedor, name='realizar_actualizacion_proveedor'),
+    path('proveedores/borrar/<int:pk>/', views.borrar_proveedor, name='borrar_proveedor'),
+]
+```
+
+-----
+
+## 🧱 Definición de Modelos (Paso 12)
+
+### 14\. `models.py` de `app_victorysports`
+
+Abre `app_victorysports/models.py` y define los modelos **Proveedor**, **Producto** y **ProductoProveedor**.
+
+```python
+# app_victorysports/models.py
+
+from django.db import models
+
+# --- Modelo para Proveedor ---
+class Proveedor(models.Model):
+    id_proveedor = models.AutoField(primary_key=True)  # Clave primaria explícita
+    nombre_empresa = models.CharField(max_length=150, unique=True)
+    telefono_empresa = models.CharField(max_length=15)
+    email_empresa = models.EmailField(max_length=100)  # Uso de EmailField
+    pais_origen = models.CharField(max_length=50)
+    contacto_principal = models.CharField(max_length=100)
+    fecha_registro = models.DateField(auto_now_add=True)  # Fecha de registro automática
+    direccion = models.TextField()
+
+    class Meta:
+        verbose_name = "Proveedor"
+        verbose_name_plural = "Proveedores"
+
+    def __str__(self):
+        return self.nombre_empresa
+
+# --- Modelo para Producto ---
+class Producto(models.Model):
+    id_producto = models.AutoField(primary_key=True)  # Clave primaria explícita
+    nombre = models.CharField(max_length=255)
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.IntegerField(default=0)
+    marca = models.CharField(max_length=100)
+    img_url = models.URLField(max_length=255, blank=True, null=True)  # URLField
+    categoria = models.CharField(max_length=50)
+    color = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Producto"
+        verbose_name_plural = "Productos"
+
+    def __str__(self):
+        return f"{self.nombre} ({self.marca})"
+
+# Modelo para Producto Proveedor (Tabla Intermedia/Many-to-Many con Datos Adicionales)
+class ProductoProveedor(models.Model):
+    # ForeignKey a Producto
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE,
+                                 related_name='relaciones_proveedor')
+    # ForeignKey a Proveedor
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE,
+                                  related_name='relaciones_producto')
+    precio_compra = models.DecimalField(max_digits=10, decimal_places=2)
+    fecha_ultima_compra = models.DateField(null=True, blank=True)
+    cantidad_comprada = models.IntegerField(default=1)
+    referencia_pedido = models.CharField(max_length=50, blank=True, null=True)
+    es_proveedor_activo = models.BooleanField(default=True)
+
+    class Meta:
+        # Define la clave primaria compuesta (producto, proveedor)
+        unique_together = (('producto', 'proveedor'),)
+        verbose_name = "Producto por Proveedor"
+        verbose_name_plural = "Productos por Proveedores"
+
+    def __str__(self):
+        return f"Relación: {self.producto.nombre} - {self.proveedor.nombre_empresa}"
+```
+
+### 15\. Realizar las migraciones (Paso 12.5)
+
+Ejecuta los siguientes comandos en la terminal con el entorno virtual activo:
+
+```bash
+python manage.py makemigrations app_victorysports
+python manage.py migrate
+```
+
+-----
+
+## 👁️ Vistas (Views) para Proveedor (Paso 14)
+
+### 16\. `views.py` para CRUD de Proveedor
+
+Abre `app_victorysports/views.py` y crea las funciones para el CRUD de `Proveedor`, sin usar `forms.py`.
+
+```python
+# app_victorysports/views.py
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from .models import Proveedor
+from django.db import IntegrityError # Necesario para manejar el unique=True en nombre_empresa
+
+# Función de inicio
+def inicio_victorysports(request):
+    """Muestra la página de inicio."""
+    return render(request, 'inicio.html') # Asume que inicio.html extiende de base.html
+
+# CREATE: Función para agregar proveedor
+def agregar_proveedor(request):
+    if request.method == 'POST':
+        # No se usa forms.py, se accede directamente a request.POST
+        try:
+            Proveedor.objects.create(
+                nombre_empresa=request.POST.get('nombre_empresa'),
+                telefono_empresa=request.POST.get('telefono_empresa'),
+                email_empresa=request.POST.get('email_empresa'),
+                pais_origen=request.POST.get('pais_origen'),
+                contacto_principal=request.POST.get('contacto_principal'),
+                direccion=request.POST.get('direccion')
+                # fecha_registro se añade automáticamente por auto_now_add
+            )
+            # Redirigir a la vista de lista después de crear
+            return redirect(reverse('ver_proveedor'))
+        except IntegrityError:
+            # Manejar el error de nombre de empresa duplicado (unique=True)
+            # Podrías pasar un mensaje de error a la plantilla si fuera necesario
+            context = {'error_message': 'Ya existe un proveedor con ese nombre de empresa.'}
+            return render(request, 'proveedor/agregar_proveedor.html', context)
+        except Exception as e:
+            # Manejar otros errores
+            context = {'error_message': f'Ocurrió un error: {e}'}
+            return render(request, 'proveedor/agregar_proveedor.html', context)
+
+    # Si es GET, muestra el formulario
+    return render(request, 'proveedor/agregar_proveedor.html')
+
+# READ: Función para ver proveedores
+def ver_proveedor(request):
+    """Muestra todos los proveedores en una tabla."""
+    proveedores = Proveedor.objects.all().order_by('nombre_empresa')
+    context = {'proveedores': proveedores}
+    # Muestra en tabla con botones ver, editar y borrar
+    return render(request, 'proveedor/ver_proveedor.html', context)
+
+# UPDATE (Formulario): Función para obtener el proveedor a actualizar
+def actualizar_proveedor(request, pk):
+    """Muestra el formulario precargado con los datos del proveedor para editar."""
+    proveedor = get_object_or_404(Proveedor, pk=pk)
+    context = {'proveedor': proveedor}
+    return render(request, 'proveedor/actualizar_proveedor.html', context)
+
+# UPDATE (Procesamiento): Función para realizar la actualización
+def realizar_actualizacion_proveedor(request):
+    if request.method == 'POST':
+        # Se asume que el id_proveedor viene en un campo oculto en el POST
+        proveedor_id = request.POST.get('id_proveedor')
+        proveedor = get_object_or_404(Proveedor, pk=proveedor_id)
+
+        try:
+            # Actualiza los campos
             proveedor.nombre_empresa = request.POST.get('nombre_empresa')
             proveedor.telefono_empresa = request.POST.get('telefono_empresa')
             proveedor.email_empresa = request.POST.get('email_empresa')
             proveedor.pais_origen = request.POST.get('pais_origen')
             proveedor.contacto_principal = request.POST.get('contacto_principal')
             proveedor.direccion = request.POST.get('direccion')
+            
+            # Guarda los cambios en la base de datos
+            proveedor.save()
 
-            try:
-                proveedor.save()
-                return redirect('ver_proveedor')
-            except IntegrityError:
-                return render(request, 'proveedor/actualizar_proveedor.html', {
-                    'proveedor': proveedor,
-                    'error_message': 'Ya existe otro proveedor con ese nombre de empresa.'
-                })
-        return redirect('ver_proveedor')
+            # Redirigir a la vista de lista después de actualizar
+            return redirect(reverse('ver_proveedor'))
+        except IntegrityError:
+            # Manejar el error de nombre de empresa duplicado
+            context = {'proveedor': proveedor, 'error_message': 'Ya existe un proveedor con ese nombre de empresa.'}
+            return render(request, 'proveedor/actualizar_proveedor.html', context)
+        except Exception as e:
+            context = {'proveedor': proveedor, 'error_message': f'Ocurrió un error: {e}'}
+            return render(request, 'proveedor/actualizar_proveedor.html', context)
 
-    @require_POST
-    def borrar_proveedor(request, pk):
-        proveedor = get_object_or_404(Proveedor, pk=pk)
+    # Si se accede por GET directamente, redirigir a la lista
+    return redirect(reverse('ver_proveedor'))
+
+# DELETE: Función para borrar proveedor
+def borrar_proveedor(request, pk):
+    """Procesa la eliminación de un proveedor."""
+    proveedor = get_object_or_404(Proveedor, pk=pk)
+    
+    if request.method == 'POST':
+        # Solo permite POST para la acción de borrado
         proveedor.delete()
-        return redirect('ver_proveedor')
-    ```
-14. [cite\_start]**Crear el archivo `app_victorysports/urls.py`** con las rutas del CRUD[cite: 1]:
-    ```python
-    from django.urls import path
-    from . import views
-
-    urlpatterns = [
-        path('', views.inicio_victorysports, name='inicio_victorysports'),
-        # CRUD Proveedor
-        path('proveedor/agregar/', views.agregar_proveedor, name='agregar_proveedor'),
-        path('proveedor/ver/', views.ver_proveedor, name='ver_proveedor'),
-        path('proveedor/actualizar/<int:pk>/', views.actualizar_proveedor, name='actualizar_proveedor'),
-        path('proveedor/realizar_actualizacion/<int:pk>/', views.realizar_actualizacion_proveedor, name='realizar_actualizacion_proveedor'),
-        path('proveedor/borrar/<int:pk>/', views.borrar_proveedor, name='borrar_proveedor'),
-    ]
-    ```
-15. [cite\_start]**Configurar `backend_Victorysports/urls.py` para enlazar la aplicación**[cite: 1]:
-    ```python
-    from django.contrib import admin
-    from django.urls import path, include
-
-    urlpatterns = [
-        path('admin/', admin.site.urls),
-        path('', include('app_victorysports.urls')), # Enlaza la app principal
-    ]
-    ```
+        # Redirigir a la vista de lista
+        return redirect(reverse('ver_proveedor'))
+    
+    # Si es GET, muestra una página de confirmación de borrado
+    context = {'proveedor': proveedor}
+    return render(request, 'proveedor/borrar_proveedor.html', context)
+```
 
 -----
 
-### 5\. Creación de Templates HTML
+## 🖼️ Archivos HTML (Templates)
 
-16. **Crear las carpetas de templates:**
-    ```bash
-    mkdir app_victorysports/templates
-    mkdir app_victorysports/templates/proveedor
-    mkdir app_victorysports/templates/categoria # Carpeta vacía de placeholder
-    ```
-17. [cite\_start]**Crear `app_victorysports/templates/base.html` (Incluye Bootstrap)**[cite: 1]:
-    ```html
-    {% load static %}
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Victorysports{% endblock %}</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        {% block extra_head %}{% endblock %}
-    </head>
-    <body class="d-flex flex-column min-vh-100" style="background-color: #f8f9fa;">
-        {% include 'header.html' %}
-        {% include 'navbar.html' %}
-        <main class="container my-4 flex-grow-1">
-            {% block content %}
-            {% endblock %}
-        </main>
-        {% include 'footer.html' %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        {% block extra_js %}{% endblock %}
-    </body>
-    </html>
-    ```
-18. **Crear `app_victorysports/templates/header.html`:**
-    ```html
-    <header class="py-3 mb-4 border-bottom" style="background-color: #4CAF50;">
-        <div class="container d-flex flex-wrap justify-content-center">
-            <a href="{% url 'inicio_victorysports' %}" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-decoration-none">
-                <span class="fs-4 text-white">Sistema de Administración Victorysports</span>
-            </a>
-        </div>
-    </header>
-    ```
-19. [cite\_start]**Crear `app_victorysports/templates/navbar.html` (Incluye menús de Categoría, Salas, y Películas como placeholders)**[cite: 1]:
-    ```html
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'inicio_victorysports' %}"><i class="fas fa-home me-1"></i> Inicio</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProveedor" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-truck me-1"></i> Proveedores
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownProveedor">
-                            <li><a class="dropdown-item" href="{% url 'agregar_proveedor' %}">Agregar Proveedor</a></li>
-                            <li><a class="dropdown-item" href="{% url 'ver_proveedor' %}">Ver Proveedores</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-tags me-1"></i> Categorías
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCategoria">
-                            <li><a class="dropdown-item" href="#">Agregar Categoria</a></li>
-                            <li><a class="dropdown-item" href="#">Ver Categoria</a></li>
-                            <li><a class="dropdown-item" href="#">Actualizar Categoria</a></li>
-                            <li><a class="dropdown-item" href="#">Borrar Categoria</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSalas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-chair me-1"></i> Salas
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownSalas">
-                            <li><a class="dropdown-item" href="#">Agregar Salas</a></li>
-                            <li><a class="dropdown-item" href="#">Ver Salas</a></li>
-                            <li><a class="dropdown-item" href="#">Actualizar Salas</a></li>
-                            <li><a class="dropdown-item" href="#">Borrar Salas</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPeliculas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-film me-1"></i> Películas
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPeliculas">
-                            <li><a class="dropdown-item" href="#">Agregar Peliculas</a></li>
-                            <li><a class="dropdown-item" href="#">Ver Peliculas</a></li>
-                            <li><a class="dropdown-item" href="#">Actualizar Peliculas</a></li>
-                            <li><a class="dropdown-item" href="#">Borrar Peliculas</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <script src="https://kit.fontawesome.com/tu-token-de-font-awesome.js" crossorigin="anonymous"></script>
-    </nav>
-    ```
-20. [cite\_start]**Crear `app_victorysports/templates/footer.html` (Fijo al final)**[cite: 1]:
-    ```html
-    <footer class="footer mt-auto py-3 bg-dark fixed-bottom">
-        <div class="container text-center">
-            <span class="text-white small">
-                &copy; {{ "now"|date:"Y" }} Derechos de Autor Victorysports. | Creado por Tec. Ricardo Santiago, Cbtis 128
-            </span>
-        </div>
-    </footer>
-    ```
-21. [cite\_start]**Crear `app_victorysports/templates/inicio.html` (Página de inicio)**[cite: 1]:
-    ```html
-    {% extends 'base.html' %}
-    {% block title %}Inicio - Victorysports{% endblock %}
-    {% block content %}
-    <div class="row">
-        <div class="col-lg-12 text-center">
-            <h1 class="display-4" style="color: #4CAF50;">Bienvenido al Sistema de Administración Victorysports</h1>
-            <p class="lead">Gestión eficiente de proveedores, productos y más.</p>
-        </div>
+> **Nota de Estilo:** Se requiere usar colores suaves, atractivos y modernos, y páginas web sencillas, utilizando Bootstrap. Por brevedad, el código de Bootstrap se representa de forma simplificada.
+
+### 17\. `base.html` (Incluir Bootstrap)
+
+Crea `app_victorysports/templates/base.html`.
+
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VictorySports Admin{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+    <style>
+        /* Colores suaves/modernos, ejemplo: */
+        body { background-color: #f8f9fa; } /* Gris muy claro */
+        .navbar { background-color: #4a6fa5 !important; } /* Azul suave */
+        .footer { background-color: #343a40; color: white; }
+    </style>
+</head>
+<body>
+    {% include "header.html" %} {% include "navbar.html" %} <div class="container mt-4 mb-5">
+        {% block content %}
+        {% endblock %}
     </div>
-    <div class="row mt-4">
-        <div class="col-lg-8 offset-lg-2">
-            <div class="card shadow">
-                <img src="https://via.placeholder.com/800x400?text=Imagen+Victorysports+Deportiva" class="card-img-top" alt="Imagen de Victorysports">
-                <div class="card-body">
-                    <h5 class="card-title">Información del Sistema</h5>
-                    <p class="card-text">
-                        Este sistema permite la administración completa de los recursos de Victorysports, incluyendo el manejo de Proveedores, Productos y la relación entre ellos.
-                    </p>
-                    <ul>
-                        <li>**Lenguaje:** Python</li>
-                        <li>**Framework:** Django</li>
-                        <li>**Editor:** VS code</li>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% include "footer.html" %} </body>
+</html>
+```
+
+### 18\. `header.html` (Opcional, incluido en `base.html`)
+
+Crea `app_victorysports/templates/header.html`. (Se incluye como bloque separado para modularidad, aunque puede ir directo en `base.html`).
+
+```html
+```
+
+### 19\. `navbar.html` (Opciones de navegación)
+
+Crea `app_victorysports/templates/navbar.html`.
+
+```html
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'inicio_victorysports' %}">Sistema de Administración Victorysports</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'inicio_victorysports' %}">Inicio</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="proveedorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Proveedor
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="proveedorDropdown">
+                        <li><a class="dropdown-item" href="{% url 'agregar_proveedor' %}">Agregar Proveedor</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_proveedor' %}">Ver Proveedores</a></li>
+                        </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="categoriasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Categorías
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="categoriasDropdown">
+                        <li><a class="dropdown-item" href="#">Agregar Categoría</a></li>
+                        <li><a class="dropdown-item" href="#">Ver Categoría</a></li>
+                        <li><a class="dropdown-item" href="#">Actualizar Categoría</a></li>
+                        <li><a class="dropdown-item" href="#">Borrar Categoría</a></li>
                     </ul>
-                </div>
-            </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Productos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="productosDropdown">
+                        <li><a class="dropdown-item" href="#">Agregar Producto</a></li>
+                        <li><a class="dropdown-item" href="#">Ver Producto</a></li>
+                        <li><a class="dropdown-item" href="#">Actualizar Producto</a></li>
+                        <li><a class="dropdown-item" href="#">Borrar Producto</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
-    {% endblock %}
-    ```
-22. [cite\_start]**Crear `app_victorysports/templates/proveedor/agregar_proveedor.html`**[cite: 1]:
-    ```html
-    {% extends 'base.html' %}
-    {% block title %}Agregar Proveedor{% endblock %}
-    {% block content %}
-    <h2 class="mb-4" style="color: #4CAF50;">Agregar Nuevo Proveedor</h2>
+</nav>
+```
 
-    {% if error_message %}
-    <div class="alert alert-danger">{{ error_message }}</div>
-    {% endif %}
+### 20\. `footer.html` (Incluir derechos, fecha, y fijo)
 
-    <div class="card p-4">
-        <form method="post" action="{% url 'agregar_proveedor' %}">
-            {% csrf_token %}
+Crea `app_victorysports/templates/footer.html`.
+
+```html
+{% load static %}
+<footer class="footer mt-auto py-3 bg-dark fixed-bottom"> <div class="container text-center">
+        <span class="text-light">
+            &copy; Derechos de Autor Victorysports {{ "now"|date:"Y" }} |
+            Fecha del Sistema: {{ "now"|date:"d/m/Y H:i:s" }} |
+            Creado por Tec. Ricardo Santiago, Cbtis 128
+        </span>
+    </div>
+</footer>
+```
+
+### 21\. `inicio.html` (Información e imagen)
+
+Crea `app_victorysports/templates/inicio.html`.
+
+```html
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio - VictorySports{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold text-primary">Bienvenido al Sistema de Administración VictorySports</h1>
+        <p class="col-md-8 fs-4 mx-auto">
+            Este sistema permite gestionar de manera eficiente los **Proveedores** y **Productos**
+            de la empresa VictorySports, incluyendo operaciones de Creación, Lectura, Actualización y Eliminación (CRUD).
+        </p>
+        <hr class="my-4">
+        <p class="fs-6 text-muted">Desarrollado en Python con el framework Django.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 text-center">
+        <img src="https://via.placeholder.com/800x300?text=Imagen+VictorySports" class="img-fluid rounded shadow" alt="Imagen representativa de VictorySports">
+    </div>
+</div>
+{% endblock content %}
+```
+
+### 22\. `agregar_proveedor.html`
+
+Crea `app_victorysports/templates/proveedor/agregar_proveedor.html`.
+
+```html
+{% extends "base.html" %}
+
+{% block title %}Agregar Proveedor{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-primary">Agregar Nuevo Proveedor</h2>
+
+{% if error_message %}
+    <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+{% endif %}
+
+<form method="POST" action="{% url 'agregar_proveedor' %}">
+    {% csrf_token %}
+    <div class="card shadow-sm">
+        <div class="card-body">
             <div class="mb-3">
                 <label for="nombre_empresa" class="form-label">Nombre de la Empresa</label>
                 <input type="text" class="form-control" id="nombre_empresa" name="nombre_empresa" required>
             </div>
             <div class="mb-3">
+                <label for="contacto_principal" class="form-label">Contacto Principal</label>
+                <input type="text" class="form-control" id="contacto_principal" name="contacto_principal" required>
+            </div>
+            <div class="mb-3">
                 <label for="telefono_empresa" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" id="telefono_empresa" name="telefono_empresa">
+                <input type="tel" class="form-control" id="telefono_empresa" name="telefono_empresa" required>
             </div>
             <div class="mb-3">
                 <label for="email_empresa" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email_empresa" name="email_empresa">
+                <input type="email" class="form-control" id="email_empresa" name="email_empresa" required>
             </div>
             <div class="mb-3">
                 <label for="pais_origen" class="form-label">País de Origen</label>
-                <input type="text" class="form-control" id="pais_origen" name="pais_origen">
-            </div>
-            <div class="mb-3">
-                <label for="contacto_principal" class="form-label">Contacto Principal</label>
-                <input type="text" class="form-control" id="contacto_principal" name="contacto_principal">
+                <input type="text" class="form-control" id="pais_origen" name="pais_origen" required>
             </div>
             <div class="mb-3">
                 <label for="direccion" class="form-label">Dirección</label>
-                <textarea class="form-control" id="direccion" name="direccion"></textarea>
+                <textarea class="form-control" id="direccion" name="direccion" rows="3" required></textarea>
             </div>
-
+        </div>
+        <div class="card-footer text-end">
             <button type="submit" class="btn btn-success">Guardar Proveedor</button>
             <a href="{% url 'ver_proveedor' %}" class="btn btn-secondary">Cancelar</a>
-        </form>
+        </div>
     </div>
-    {% endblock %}
-    ```
-23. [cite\_start]**Crear `app_victorysports/templates/proveedor/ver_proveedor.html`**[cite: 1]:
-    ```html
-    {% extends 'base.html' %}
-    {% block title %}Ver Proveedores{% endblock %}
-    {% block content %}
-    <h2 class="mb-4" style="color: #4CAF50;">Listado de Proveedores</h2>
-    <a href="{% url 'agregar_proveedor' %}" class="btn btn-success mb-3">Agregar Nuevo Proveedor</a>
+</form>
+{% endblock content %}
+```
 
-    {% if proveedores %}
-    <div class="table-responsive">
-        <table class="table table-striped table-hover shadow-sm">
-            <thead class="bg-success text-white">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre de Empresa</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
-                    <th>País</th>
-                    <th>Registro</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for proveedor in proveedores %}
-                <tr>
-                    <td>{{ proveedor.id_proveedor }}</td>
-                    <td>{{ proveedor.nombre_empresa }}</td>
-                    <td>{{ proveedor.telefono_empresa }}</td>
-                    <td>{{ proveedor.email_empresa }}</td>
-                    <td>{{ proveedor.pais_origen }}</td>
-                    <td>{{ proveedor.fecha_registro|date:"Y-m-d" }}</td>
-                    <td>
-                        <a href="{% url 'actualizar_proveedor' proveedor.id_proveedor %}" class="btn btn-warning btn-sm me-1" title="Editar"><i class="fas fa-edit"></i></a>
-                        <form action="{% url 'borrar_proveedor' proveedor.id_proveedor %}" method="post" class="d-inline" onsubmit="return confirm('¿Está seguro de borrar a {{ proveedor.nombre_empresa }}?');">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm" title="Borrar"><i class="fas fa-trash-alt"></i></button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <div class="alert alert-warning">No hay proveedores registrados.</div>
-    {% endif %}
+### 23\. `ver_proveedor.html` (Mostrar en tabla con botones ver, editar y borrar)
 
-    {% endblock %}
-    {% block extra_head %}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    {% endblock %}
-    ```
-24. [cite\_start]**Crear `app_victorysports/templates/proveedor/actualizar_proveedor.html`**[cite: 1]:
-    ```html
-    {% extends 'base.html' %}
-    {% block title %}Actualizar Proveedor{% endblock %}
-    {% block content %}
-    <h2 class="mb-4" style="color: #4CAF50;">Actualizar Proveedor: {{ proveedor.nombre_empresa }}</h2>
+Crea `app_victorysports/templates/proveedor/ver_proveedor.html`.
 
-    {% if error_message %}
-    <div class="alert alert-danger">{{ error_message }}</div>
-    {% endif %}
+```html
+{% extends "base.html" %}
 
-    <div class="card p-4">
-        <form method="post" action="{% url 'realizar_actualizacion_proveedor' proveedor.id_proveedor %}">
-            {% csrf_token %}
+{% block title %}Ver Proveedores{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-primary">Lista de Proveedores</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre Empresa</th>
+                <th>Contacto</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>País</th>
+                <th>Registro</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for proveedor in proveedores %}
+            <tr>
+                <td>{{ proveedor.id_proveedor }}</td>
+                <td>{{ proveedor.nombre_empresa }}</td>
+                <td>{{ proveedor.contacto_principal }}</td>
+                <td>{{ proveedor.telefono_empresa }}</td>
+                <td>{{ proveedor.email_empresa }}</td>
+                <td>{{ proveedor.pais_origen }}</td>
+                <td>{{ proveedor.fecha_registro|date:"d/m/Y" }}</td>
+                <td class="text-center">
+                    <a href="#" class="btn btn-sm btn-info" title="Ver Detalle">Ver</a> 
+                    <a href="{% url 'actualizar_proveedor' pk=proveedor.id_proveedor %}" class="btn btn-sm btn-warning" title="Editar">Editar</a>
+                    <a href="{% url 'borrar_proveedor' pk=proveedor.id_proveedor %}" class="btn btn-sm btn-danger" title="Borrar">Borrar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">No hay proveedores registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="text-end mt-3">
+    <a href="{% url 'agregar_proveedor' %}" class="btn btn-primary">Agregar Nuevo Proveedor</a>
+</div>
+
+{% endblock content %}
+```
+
+### 24\. `actualizar_proveedor.html`
+
+Crea `app_victorysports/templates/proveedor/actualizar_proveedor.html`.
+
+```html
+{% extends "base.html" %}
+
+{% block title %}Actualizar Proveedor: {{ proveedor.nombre_empresa }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-warning">Actualizar Proveedor</h2>
+
+{% if error_message %}
+    <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+{% endif %}
+
+<form method="POST" action="{% url 'realizar_actualizacion_proveedor' %}">
+    {% csrf_token %}
+    <input type="hidden" name="id_proveedor" value="{{ proveedor.id_proveedor }}">
+    
+    <div class="card shadow-sm">
+        <div class="card-body">
             <div class="mb-3">
                 <label for="nombre_empresa" class="form-label">Nombre de la Empresa</label>
                 <input type="text" class="form-control" id="nombre_empresa" name="nombre_empresa" value="{{ proveedor.nombre_empresa }}" required>
             </div>
             <div class="mb-3">
+                <label for="contacto_principal" class="form-label">Contacto Principal</label>
+                <input type="text" class="form-control" id="contacto_principal" name="contacto_principal" value="{{ proveedor.contacto_principal }}" required>
+            </div>
+            <div class="mb-3">
                 <label for="telefono_empresa" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" id="telefono_empresa" name="telefono_empresa" value="{{ proveedor.telefono_empresa }}">
+                <input type="tel" class="form-control" id="telefono_empresa" name="telefono_empresa" value="{{ proveedor.telefono_empresa }}" required>
             </div>
             <div class="mb-3">
                 <label for="email_empresa" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email_empresa" name="email_empresa" value="{{ proveedor.email_empresa }}">
+                <input type="email" class="form-control" id="email_empresa" name="email_empresa" value="{{ proveedor.email_empresa }}" required>
             </div>
             <div class="mb-3">
                 <label for="pais_origen" class="form-label">País de Origen</label>
-                <input type="text" class="form-control" id="pais_origen" name="pais_origen" value="{{ proveedor.pais_origen }}">
-            </div>
-            <div class="mb-3">
-                <label for="contacto_principal" class="form-label">Contacto Principal</label>
-                <input type="text" class="form-control" id="contacto_principal" name="contacto_principal" value="{{ proveedor.contacto_principal }}">
+                <input type="text" class="form-control" id="pais_origen" name="pais_origen" value="{{ proveedor.pais_origen }}" required>
             </div>
             <div class="mb-3">
                 <label for="direccion" class="form-label">Dirección</label>
-                <textarea class="form-control" id="direccion" name="direccion">{{ proveedor.direccion }}</textarea>
+                <textarea class="form-control" id="direccion" name="direccion" rows="3" required>{{ proveedor.direccion }}</textarea>
             </div>
-
-            <button type="submit" class="btn btn-success">Actualizar Proveedor</button>
+            <div class="mb-3">
+                <label class="form-label">Fecha de Registro</label>
+                <p class="form-control-static">{{ proveedor.fecha_registro|date:"d/m/Y" }}</p>
+                <small class="text-muted">La fecha de registro no se puede modificar.</small>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <button type="submit" class="btn btn-warning">Actualizar Proveedor</button>
             <a href="{% url 'ver_proveedor' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </div>
+</form>
+{% endblock content %}
+```
+
+### 25\. `borrar_proveedor.html`
+
+Crea `app_victorysports/templates/proveedor/borrar_proveedor.html`.
+
+```html
+{% extends "base.html" %}
+
+{% block title %}Borrar Proveedor{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">¡Advertencia de Eliminación!</h4>
+    <p>Estás a punto de eliminar al proveedor **{{ proveedor.nombre_empresa }}** (ID: {{ proveedor.id_proveedor }}). Esta acción es irreversible.</p>
+    <hr>
+    <p class="mb-0">¿Estás absolutamente seguro que deseas continuar?</p>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <p><strong>Detalles del Proveedor:</strong></p>
+        <ul>
+            <li>**Empresa:** {{ proveedor.nombre_empresa }}</li>
+            <li>**Contacto:** {{ proveedor.contacto_principal }}</li>
+            <li>**Teléfono:** {{ proveedor.telefono_empresa }}</li>
+        </ul>
+
+        <form method="POST" action="{% url 'borrar_proveedor' pk=proveedor.id_proveedor %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-lg">Sí, Eliminar Permanentemente</button>
+            <a href="{% url 'ver_proveedor' %}" class="btn btn-secondary btn-lg">No, Volver a la Lista</a>
         </form>
     </div>
-    {% endblock %}
-    ```
+</div>
+{% endblock content %}
+```
 
 -----
 
-### 6\. Configuración del Administrador y Ejecución
+## 🔒 Administración y Migraciones (Paso 27)
 
-25. [cite\_start]**Registrar los modelos en `app_victorysports/admin.py`**[cite: 1]:
-    ```python
-    from django.contrib import admin
-    from .models import Proveedor, Producto, ProductoProveedor
+### 26\. Registrar los modelos en `admin.py`
 
-    # Opciones para Proveedor
-    class ProveedorAdmin(admin.ModelAdmin):
-        list_display = ('id_proveedor', 'nombre_empresa', 'pais_origen', 'fecha_registro', 'contacto_principal')
-        search_fields = ('nombre_empresa', 'email_empresa')
+Abre `app_victorysports/admin.py` y registra los tres modelos.
 
-    # Opciones para Producto
-    class ProductoAdmin(admin.ModelAdmin):
-        list_display = ('id_producto', 'nombre', 'precio_unitario', 'stock', 'marca', 'categoria')
-        search_fields = ('nombre', 'marca', 'categoria')
-        list_filter = ('categoria', 'marca')
+```python
+# app_victorysports/admin.py
 
-    # Opciones para ProductoProveedor
-    class ProductoProveedorAdmin(admin.ModelAdmin):
-        list_display = ('producto', 'proveedor', 'precio_compra', 'cantidad_comprada', 'es_proveedor_activo')
-        list_filter = ('es_proveedor_activo',)
-        raw_id_fields = ('producto', 'proveedor')
+from django.contrib import admin
+from .models import Proveedor, Producto, ProductoProveedor
 
-    # Registro de modelos
-    admin.site.register(Proveedor, ProveedorAdmin)
-    admin.site.register(Producto, ProductoAdmin)
-    admin.site.register(ProductoProveedor, ProductoProveedorAdmin)
-    ```
-26. **Volver a aplicar migraciones (solo para asegurar la configuración del Admin):**
-    ```bash
-    python manage.py makemigrations
-    python manage.py migrate
-    ```
-27. **Crear un superusuario (opcional, pero necesario para el Admin):**
-    ```bash
-    python manage.py createsuperuser
-    ```
-28. **Ejecutar el servidor en el puerto 8036:**
-    ```bash
-    python manage.py runserver 8036
-    ```
-29. **Acceder al proyecto en el navegador:**
-    ```
-    http://127.0.0.1:8036/
-    ```
+# Clase para personalizar la vista en el Admin
+class ProveedorAdmin(admin.ModelAdmin):
+    list_display = ('id_proveedor', 'nombre_empresa', 'contacto_principal', 'pais_origen', 'fecha_registro')
+    search_fields = ('nombre_empresa', 'contacto_principal', 'email_empresa')
+    list_filter = ('pais_origen', 'fecha_registro')
+    ordering = ('nombre_empresa',)
+
+class ProductoAdmin(admin.ModelAdmin):
+    list_display = ('id_producto', 'nombre', 'marca', 'categoria', 'stock', 'precio_unitario')
+    search_fields = ('nombre', 'marca', 'categoria')
+    list_filter = ('categoria', 'marca', 'stock')
+    ordering = ('nombre',)
+
+class ProductoProveedorAdmin(admin.ModelAdmin):
+    list_display = ('producto', 'proveedor', 'precio_compra', 'cantidad_comprada', 'es_proveedor_activo')
+    list_filter = ('es_proveedor_activo', 'fecha_ultima_compra')
+    search_fields = ('producto__nombre', 'proveedor__nombre_empresa')
+
+# Registrar los modelos
+admin.site.register(Proveedor, ProveedorAdmin)
+admin.site.register(Producto, ProductoAdmin)
+admin.site.register(ProductoProveedor, ProductoProveedorAdmin)
+```
+
+### 27\. Crear Superusuario
+
+Si no lo has hecho, es necesario para acceder al panel de administración de Django:
+
+```bash
+python manage.py createsuperuser
+```
+
+*(Sigue las instrucciones en la terminal para crear el usuario.)*
+
+### 28\. Volver a realizar las migraciones
+
+Aunque no se hicieron cambios en la estructura de la base de datos (solo en `admin.py`), este paso es el proceso estándar.
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+*(Si no hay cambios en `models.py`, el primer comando indicará que no hay migraciones por hacer.)*
+
+-----
+
+## 🚀 Ejecución Final (Paso 30, 31)
+
+### 29\. Ejecutar servidor en el puerto 8036
+
+Asegúrate de que el entorno virtual esté activo y ejecuta:
+
+```bash
+python manage.py runserver 8036
+```
+
+*(El proyecto estará totalmente funcional.)*
+
+### 30\. Copiar y pegar el link en el navegador
+
+Copia el link que aparece en la terminal (normalmente `http://127.0.0.1:8036/`) y pégalo en tu navegador para ver la página de inicio.
+
+-----
